@@ -16,6 +16,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -24,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
@@ -35,9 +40,6 @@ import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import top.lizhanqi.www.zxing.R;
 import top.lizhanqi.www.zxing.scanner.camera.CameraManager;
 import top.lizhanqi.www.zxing.scanner.common.BitmapUtils;
@@ -57,7 +59,7 @@ import top.lizhanqi.www.zxing.scanner.view.ViewfinderView;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public final class CaptureActivity extends Activity implements
+public final class CaptureActivity extends AppCompatActivity implements
         SurfaceHolder.Callback, View.OnClickListener {
     private static final String TAG = CaptureActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 100;
@@ -179,6 +181,16 @@ public final class CaptureActivity extends Activity implements
         ambientLightManager = new AmbientLightManager(this);
         // 监听图片识别按钮
         findViewById(R.id.capture_scan_photo).setOnClickListener(this);
+       android.support.v7.widget.Toolbar tb= findViewById(R.id.toolbar_zxing);
+        setSupportActionBar(tb);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        tb.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         findViewById(R.id.capture_flashlight).setOnClickListener(this);
         builder = new AlertDialog.Builder(this).
                 setTitle("相机权限申请").setMessage("扫码需要相机权限,请授予!").setCancelable(false)
